@@ -12,10 +12,14 @@
         }
     </script>
 </head>
-<body class="bg-slate-900 text-white dark:bg-slate-900 dark:text-white transition-colors duration-300 min-h-screen flex flex-col items-center justify-center p-6 font-sans">
+<body class="bg-slate-900 text-white dark:bg-slate-900 dark:text-white transition-colors duration-300 min-h-screen flex flex-col items-center justify-center p-6 font-sans relative">
 
     <!-- Üst Kontrol Paneli -->
     <div class="absolute top-6 right-6 flex items-center gap-3">
+        <!-- Kalan Hak Göstergesi -->
+        <div id="creditBadge" class="bg-indigo-950 text-indigo-300 px-3 py-2 rounded-xl text-xs font-bold border border-indigo-800 shadow-md flex items-center gap-1.5">
+            <i class="fas fa-bolt text-yellow-400"></i> <span id="creditsLeft">3</span> <span data-i18n="creditsText">Free Scans Left</span>
+        </div>
         <button onclick="toggleLanguage()" id="langBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-xl text-xs font-bold border border-slate-700 shadow-md transition flex items-center gap-2">
             <i class="fas fa-globe"></i> <span id="langText">TR</span>
         </button>
@@ -101,6 +105,25 @@
         </div>
     </div>
 
+    <!-- Pro Yükseltme Modalı (Popup) -->
+    <div id="upgradeModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-slate-800 border border-indigo-500/50 rounded-2xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl relative">
+            <div class="w-16 h-16 bg-indigo-600/20 text-indigo-400 rounded-2xl mx-auto flex items-center justify-center text-3xl border border-indigo-500/30">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white" data-i18n="modalTitle">Unlock Pro Features</h3>
+            <p class="text-slate-300 text-sm" data-i18n="modalDesc">You have reached your daily free limit. Upgrade to Pro for unlimited scans, batch processing, and priority API access.</p>
+            
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 flex items-center justify-between">
+                <span class="text-sm text-slate-300 font-medium" data-i18n="modalPlan">Pro Unlimited Plan</span>
+                <span class="text-xl font-extrabold text-indigo-400">$4.99 <span class="text-xs text-slate-400">/mo</span></span>
+            </div>
+
+            <button onclick="simulateCheckout()" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-bold py-3.5 rounded-xl shadow-lg transition" data-i18n="modalBtn">Upgrade Now (Stripe)</button>
+            <button onclick="closeModal()" class="text-xs text-slate-400 hover:text-white transition" data-i18n="modalClose">Maybe Later</button>
+        </div>
+    </div>
+
     <script>
         const translations = {
             en: {
@@ -125,7 +148,14 @@
                 selectFirst: "Please select or drop an image first!",
                 noHistory: "No recent scans.",
                 realLabel: "Real",
-                aiLabel: "AI"
+                aiLabel: "AI",
+                creditsText: "Free Scans Left",
+                modalTitle: "Unlock Pro Features",
+                modalDesc: "You have reached your daily free limit. Upgrade to Pro for unlimited scans, batch processing, and priority API access.",
+                modalPlan: "Pro Unlimited Plan",
+                modalBtn: "Upgrade Now",
+                modalClose: "Maybe Later",
+                limitReached: "Daily limit reached! Please upgrade to Pro."
             },
             tr: {
                 title: "Yapay Zeka Görsel Dedektörü",
@@ -149,27 +179,48 @@
                 selectFirst: "Lütfen önce bir görsel seçin veya sürükleyin!",
                 noHistory: "Henüz tarama geçmişi yok.",
                 realLabel: "Gerçek",
-                aiLabel: "YZ"
+                aiLabel: "YZ",
+                creditsText: "Ücretsiz Tarama Hakkı",
+                modalTitle: "Pro Özelliklerin Kilidini Aç",
+                modalDesc: "Günlük ücretsiz tarama sınırına ulaştın. Sınırsız tarama ve gelişmiş özellikler için Pro plana geç.",
+                modalPlan: "Pro Sınırsız Plan",
+                modalBtn: "Hemen Yükselt",
+                modalClose: "Belki Sonra",
+                limitReached: "Günlük sınır doldu! Lütfen Pro'ya geçin."
             }
         };
 
         let currentLang = localStorage.getItem('lang') || 'en';
         let isDark = localStorage.getItem('theme') !== 'light';
-        let lastAnalysisStatus = null; // Sonucu dilde anlık değiştirebilmek için hafızada tutuyoruz
+        let lastAnalysisStatus = null; 
+
+        // Günlük Hak Yönetimi (Başlangıç 3 hak)
+        let freeCredits = parseInt(localStorage.getItem('freeCredits'));
+        let lastResetDate = localStorage.getItem('lastResetDate');
+        const today = new Date().toDateString();
+
+        if (!freeCredits || lastResetDate !== today) {
+            freeCredits = 3;
+            localStorage.setItem('freeCredits', freeCredits);
+            localStorage.setItem('lastResetDate', today);
+        }
 
         window.addEventListener('DOMContentLoaded', () => {
             applyLanguage();
             applyTheme();
             loadHistory();
+            updateCreditDisplay();
         });
+
+        function updateCreditDisplay() {
+            document.getElementById('creditsLeft').innerText = freeCredits;
+        }
 
         function toggleLanguage() {
             currentLang = currentLang === 'en' ? 'tr' : 'en';
             localStorage.setItem('lang', currentLang);
             applyLanguage();
             loadHistory();
-            
-            // Eğer ekranda aktif bir sonuç varsa dil değişimine göre onu da güncelle
             if (lastAnalysisStatus) {
                 updateSummaryMessage(lastAnalysisStatus.aiScore, lastAnalysisStatus.statusKey);
             }
@@ -246,6 +297,16 @@
         }
 
         async function analyzeImage() {
+            if (freeCredits <= 0) {
+                document.getElementById('upgradeModal').classList.remove('hidden');
+                return;
+            }
+
+            if (fileInput.files.length === 0) {
+                alert(translations[currentLang].selectFirst);
+                return;
+            }
+
             const scanButton = document.getElementById('scanButton');
             const buttonText = document.getElementById('buttonText');
             const buttonIcon = document.getElementById('buttonIcon');
@@ -259,12 +320,12 @@
             const aiProgressBar = document.getElementById('aiProgressBar');
             const humanProgressBar = document.getElementById('humanProgressBar');
 
-            if (fileInput.files.length === 0) {
-                alert(translations[currentLang].selectFirst);
-                return;
-            }
-
             const currentFile = fileInput.files[0];
+
+            // Hakkı düşür
+            freeCredits--;
+            localStorage.setItem('freeCredits', freeCredits);
+            updateCreditDisplay();
 
             scanButton.disabled = true;
             scanButton.classList.add('opacity-70', 'cursor-not-allowed');
@@ -335,6 +396,18 @@
                 buttonText.innerText = translations[currentLang].scanBtn;
                 buttonIcon.className = "fas fa-robot";
             }
+        }
+
+        function closeModal() {
+            document.getElementById('upgradeModal').classList.add('hidden');
+        }
+
+        function simulateCheckout() {
+            alert(currentLang === 'tr' ? "Bu bir demo sürümüdür! Gerçek projede buraya Stripe / Iyzico ödeme entegrasyonu bağlanır." : "This is a demo! In a real project, Stripe / payment gateway integrates here.");
+            freeCredits = 10; // Demo amaçlı hak verelim
+            localStorage.setItem('freeCredits', freeCredits);
+            updateCreditDisplay();
+            closeModal();
         }
 
         function addToHistory(name, score, statusKey) {
