@@ -107,7 +107,7 @@
     </div>
 
     <!-- Footer ve Yasal Linkler -->
-    <footer class="mt-8 text-center text-xs text-slate-500 space-y-2">
+    <footer class="mt-8 text-center text-xs text-slate-500 space-y-2 mb-12">
         <p>&copy; 2026 AI Image Detector Pro. <span data-i18n="footerRights">All rights reserved.</span> <span data-i18n="privacyNote">- Images are never stored.</span></p>
         <div class="flex flex-wrap justify-center gap-3 text-slate-400">
             <button onclick="openModal('privacy')" class="hover:underline" data-i18n="privacyLink">Privacy Policy</button>
@@ -120,12 +120,12 @@
         </div>
     </footer>
 
-    <!-- Çerez (Cookie) Onay Banner'ı -->
-    <div id="cookieBanner" class="fixed bottom-0 left-0 right-0 bg-slate-950/95 border-t border-slate-800 p-4 z-40 hidden flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl backdrop-blur-md">
-        <p class="text-xs text-slate-300 text-center sm:text-left max-w-2xl" data-i18n="cookieText">
+    <!-- Çerez (Cookie) Onay Banner'ı (Düzeltildi) -->
+    <div id="cookieBanner" class="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-md bg-slate-950/95 border border-slate-800 p-4 z-40 hidden rounded-2xl shadow-2xl backdrop-blur-md flex flex-col gap-3">
+        <p class="text-xs text-slate-300 leading-relaxed" data-i18n="cookieText">
             We use cookies and local storage to improve your experience and manage scan credits. By continuing, you agree to our privacy policy.
         </p>
-        <button onclick="acceptCookies()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition shadow-md whitespace-nowrap" data-i18n="cookieBtn">
+        <button onclick="acceptCookies()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold py-2.5 rounded-xl transition shadow-md" data-i18n="cookieBtn">
             Accept & Close
         </button>
     </div>
@@ -202,7 +202,7 @@
                 refundLink: "Refund Policy",
                 closeBtn: "Close",
                 cookieText: "We use local storage and cookies to improve your experience and manage scan credits.",
-                cookieBtn: "Accept",
+                cookieBtn: "Accept & Close",
                 privacyTitle: "Privacy Policy",
                 privacyBody: "<strong>Data Security & Privacy:</strong><br>1. <strong>No Image Storage:</strong> Images uploaded to AI Image Detector Pro are processed instantly in memory for analysis and are <strong>never saved, archived, or shared</strong> with third parties.<br>2. <strong>Cookies:</strong> We use local storage solely to track your remaining free scan credits and user preferences.",
                 termsTitle: "Terms of Service",
@@ -251,7 +251,7 @@
                 refundLink: "İptal ve İade Politikası",
                 closeBtn: "Kapat",
                 cookieText: "Deneyiminizi geliştirmek ve tarama haklarınızı yönetmek için çerezler ve yerel depolama kullanıyoruz.",
-                cookieBtn: "Kabul Et",
+                cookieBtn: "Kabul Et ve Kapat",
                 privacyTitle: "Gizlilik Politikası",
                 privacyBody: "<strong>Veri Güvenliği ve Gizlilik:</strong><br>1. <strong>Görsel Saklanmaz:</strong> Yüklenen görseller yalnızca analiz amacıyla RAM üzerinde anlık işlenir; <strong>asla kaydedilmez veya 3. taraflarla paylaşılmaz</strong>.<br>2. <strong>Çerezler:</strong> Haklarınızı ve tema tercihlerinizi takip etmek için yerel depolama kullanılır.",
                 termsTitle: "Kullanım Koşulları",
