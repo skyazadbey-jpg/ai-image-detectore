@@ -16,7 +16,6 @@
 
     <!-- Üst Kontrol Paneli -->
     <div class="absolute top-6 right-6 flex items-center gap-3">
-        <!-- Kalan Hak Göstergesi -->
         <div id="creditBadge" class="bg-indigo-950 text-indigo-300 px-3 py-2 rounded-xl text-xs font-bold border border-indigo-800 shadow-md flex items-center gap-1.5">
             <i class="fas fa-bolt text-yellow-400"></i> <span id="creditsLeft">3</span> <span data-i18n="creditsText">Free Scans Left</span>
         </div>
@@ -91,7 +90,6 @@
                 </div>
                 
                 <p id="summaryMessage" class="text-lg font-bold pt-2"></p>
-                <!-- Yasal Sorumluluk Reddi (Disclaimer) -->
                 <p class="text-[11px] text-slate-500 italic mt-2" data-i18n="disclaimerText">* Estimates are AI-based and may not be 100% accurate. Do not use as official legal evidence.</p>
             </div>
         </div>
@@ -108,15 +106,29 @@
         </div>
     </div>
 
-    <!-- Alt Bilgi ve Yasal Linkler (Footer) -->
+    <!-- Footer ve Yasal Linkler -->
     <footer class="mt-8 text-center text-xs text-slate-500 space-y-2">
         <p>&copy; 2026 AI Image Detector Pro. <span data-i18n="footerRights">All rights reserved.</span> <span data-i18n="privacyNote">- Images are never stored.</span></p>
-        <div class="flex justify-center gap-4 text-slate-400">
+        <div class="flex flex-wrap justify-center gap-3 text-slate-400">
             <button onclick="openModal('privacy')" class="hover:underline" data-i18n="privacyLink">Privacy Policy</button>
             <span>•</span>
             <button onclick="openModal('terms')" class="hover:underline" data-i18n="termsLink">Terms of Service</button>
+            <span>•</span>
+            <button onclick="openModal('distance')" class="hover:underline" data-i18n="distanceLink">Distance Sales Agreement</button>
+            <span>•</span>
+            <button onclick="openModal('refund')" class="hover:underline" data-i18n="refundLink">Refund Policy</button>
         </div>
     </footer>
+
+    <!-- Çerez (Cookie) Onay Banner'ı -->
+    <div id="cookieBanner" class="fixed bottom-0 left-0 right-0 bg-slate-950/95 border-t border-slate-800 p-4 z-40 hidden flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl backdrop-blur-md">
+        <p class="text-xs text-slate-300 text-center sm:text-left max-w-2xl" data-i18n="cookieText">
+            We use cookies and local storage to improve your experience and manage scan credits. By continuing, you agree to our privacy policy.
+        </p>
+        <button onclick="acceptCookies()" class="bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition shadow-md whitespace-nowrap" data-i18n="cookieBtn">
+            Accept & Close
+        </button>
+    </div>
 
     <!-- Pro Yükseltme Modalı -->
     <div id="upgradeModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
@@ -137,7 +149,7 @@
         </div>
     </div>
 
-    <!-- Yasal Metinler Modalı (Privacy & Terms) -->
+    <!-- Yasal Metinler Modalı -->
     <div id="legalModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-lg w-full p-6 text-left space-y-4 shadow-2xl relative max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center border-b border-slate-700 pb-3">
@@ -186,11 +198,19 @@
                 privacyNote: "- Images are never stored.",
                 privacyLink: "Privacy Policy",
                 termsLink: "Terms of Service",
+                distanceLink: "Distance Sales Agreement",
+                refundLink: "Refund Policy",
                 closeBtn: "Close",
+                cookieText: "We use local storage and cookies to improve your experience and manage scan credits.",
+                cookieBtn: "Accept",
                 privacyTitle: "Privacy Policy",
-                privacyBody: "<strong>Data Security & Privacy:</strong><br>1. <strong>No Image Storage:</strong> Images uploaded to AI Image Detector Pro are processed instantly in memory for analysis and are <strong>never saved, archived, or shared</strong> with third parties.<br>2. <strong>Cookies:</strong> We use local storage solely to track your remaining free scan credits and user preferences (dark mode, language). No personal tracking data is collected.",
+                privacyBody: "<strong>Data Security & Privacy:</strong><br>1. <strong>No Image Storage:</strong> Images uploaded to AI Image Detector Pro are processed instantly in memory for analysis and are <strong>never saved, archived, or shared</strong> with third parties.<br>2. <strong>Cookies:</strong> We use local storage solely to track your remaining free scan credits and user preferences.",
                 termsTitle: "Terms of Service",
-                termsBody: "<strong>Terms & Conditions:</strong><br>1. <strong>Acceptance:</strong> By using this tool, you agree to use it responsibly.<br>2. <strong>Disclaimer of Liability:</strong> AI detection scores are probabilistic estimates and may contain errors. This service cannot be held liable for decisions made based on analysis results.<br>3. <strong>Usage Restrictions:</strong> You agree not to upload illegal, copyrighted, or malicious content."
+                termsBody: "<strong>Terms & Conditions:</strong><br>1. <strong>Acceptance:</strong> By using this tool, you agree to use it responsibly.<br>2. <strong>Disclaimer of Liability:</strong> AI detection scores are probabilistic estimates and may contain errors.<br>3. <strong>Restrictions:</strong> You agree not to upload illegal, copyrighted, or malicious content.",
+                distanceTitle: "Distance Sales Agreement",
+                distanceBody: "<strong>Distance Selling Contract:</strong><br>1. <strong>Subject:</strong> This agreement regulates the sales terms of digital subscription services provided via AI Image Detector Pro.<br>2. <strong>Provider & Consumer:</strong> The service is delivered digitally instantly upon payment confirmation.<br>3. <strong>Pricing:</strong> Pro subscription is billed at $4.99 per month.",
+                refundTitle: "Refund Policy",
+                refundBody: "<strong>Cancellation & Refund Policy:</strong><br>1. <strong>Digital Services:</strong> Since our Pro plan provides instant digital access and computational API resources, subscriptions are generally non-refundable once activated.<br>2. <strong>Cancellations:</strong> You can cancel your recurring monthly subscription at any time through your account billing portal."
             },
             tr: {
                 title: "Yapay Zeka Görsel Dedektörü",
@@ -227,11 +247,19 @@
                 privacyNote: "- Görseller asla saklanmaz.",
                 privacyLink: "Gizlilik Politikası",
                 termsLink: "Kullanım Koşulları",
+                distanceLink: "Mesafeli Satış Sözleşmesi",
+                refundLink: "İptal ve İade Politikası",
                 closeBtn: "Kapat",
+                cookieText: "Deneyiminizi geliştirmek ve tarama haklarınızı yönetmek için çerezler ve yerel depolama kullanıyoruz.",
+                cookieBtn: "Kabul Et",
                 privacyTitle: "Gizlilik Politikası",
-                privacyBody: "<strong>Veri Güvenliği ve Gizlilik:</strong><br>1. <strong>Görsel Saklanmaz:</strong> AI Image Detector Pro'ya yüklenen görseller yalnızca analiz amacıyla RAM üzerinde anlık olarak işlenir; <strong>asla kaydedilmez, arşivlenmez veya 3. taraflarla paylaşılmaz</strong>.<br>2. <strong>Çerezler:</strong> Tarayıcınızda yalnızca ücretsiz tarama haklarınızı ve tema tercihlerinizi takip etmek için yerel depolama (localStorage) kullanılır.",
+                privacyBody: "<strong>Veri Güvenliği ve Gizlilik:</strong><br>1. <strong>Görsel Saklanmaz:</strong> Yüklenen görseller yalnızca analiz amacıyla RAM üzerinde anlık işlenir; <strong>asla kaydedilmez veya 3. taraflarla paylaşılmaz</strong>.<br>2. <strong>Çerezler:</strong> Haklarınızı ve tema tercihlerinizi takip etmek için yerel depolama kullanılır.",
                 termsTitle: "Kullanım Koşulları",
-                termsBody: "<strong>Kullanım Şartları:</strong><br>1. <strong>Kabul:</strong> Bu aracı kullanarak hizmet koşullarımızı kabul etmiş sayarsınız.<br>2. <strong>Sorumluluk Reddi:</strong> Yapay zeka tespit skorları tahminden ibarettir ve hatalı sonuçlar içerebilir. Analiz sonuçlarına dayanarak alınan kararlardan servisimiz sorumlu tutulamaz.<br>3. <strong>Kısıtlamalar:</strong> Yasadışı, telif haklı veya zararlı içerikler yüklememeyi taahhüt edersiniz."
+                termsBody: "<strong>Kullanım Şartları:</strong><br>1. <strong>Kabul:</strong> Bu aracı sorumlu bir şekilde kullanmayı taahhüt edersiniz.<br>2. <strong>Sorumluluk Reddi:</strong> Tespit skorları tahminden ibarettir; hatalı sonuçlardan servisimiz sorumlu tutulamaz.<br>3. <strong>Kısıtlamalar:</strong> Yasadışı veya telif haklı içerikler yüklenemez.",
+                distanceTitle: "Mesafeli Satış Sözleşmesi",
+                distanceBody: "<strong>Mesafeli Satış Sözleşmesi Esasları:</strong><br>1. <strong>Konu:</strong> Bu sözleşme, dijital Pro abonelik hizmetlerinin satış koşullarını düzenler.<br>2. <strong>İfa:</strong> Hizmet, ödeme onayının ardından dijital ortamda anında kullanıma sunulur.<br>3. <strong>Ücretlendirme:</strong> Pro plan aylık 4.99$ olarak faturalandırılır.",
+                refundTitle: "İptal ve İade Politikası",
+                refundBody: "<strong>İptal ve İade Şartları:</strong><br>1. <strong>Dijital Ürünler:</strong> Pro plan anında dijital erişim ve sunucu API kaynağı sağladığı için, aktivasyon sonrası genel olarak iade yapılmaz.<br>2. <strong>Abonelik İptali:</strong> Yinelenen aylık aboneliğinizi dilediğiniz zaman panel üzerinden iptal edebilirsiniz."
             }
         };
 
@@ -254,7 +282,19 @@
             applyTheme();
             loadHistory();
             updateCreditDisplay();
+            checkCookieConsent();
         });
+
+        function checkCookieConsent() {
+            if (!localStorage.getItem('cookieAccepted')) {
+                document.getElementById('cookieBanner').classList.remove('hidden');
+            }
+        }
+
+        function acceptCookies() {
+            localStorage.setItem('cookieAccepted', 'true');
+            document.getElementById('cookieBanner').classList.add('hidden');
+        }
 
         function updateCreditDisplay() {
             document.getElementById('creditsLeft').innerText = freeCredits;
@@ -458,9 +498,15 @@
             if (type === 'privacy') {
                 legalTitle.innerText = translations[currentLang].privacyTitle;
                 legalContent.innerHTML = translations[currentLang].privacyBody;
-            } else {
+            } else if (type === 'terms') {
                 legalTitle.innerText = translations[currentLang].termsTitle;
                 legalContent.innerHTML = translations[currentLang].termsBody;
+            } else if (type === 'distance') {
+                legalTitle.innerText = translations[currentLang].distanceTitle;
+                legalContent.innerHTML = translations[currentLang].distanceBody;
+            } else if (type === 'refund') {
+                legalTitle.innerText = translations[currentLang].refundTitle;
+                legalContent.innerHTML = translations[currentLang].refundBody;
             }
             legalModal.classList.remove('hidden');
         }
